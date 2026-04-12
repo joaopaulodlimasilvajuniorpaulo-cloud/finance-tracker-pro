@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Finance Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span>💼</span>
+      <div>
+        <h2>Finance</h2>
+        <p>Dashboard</p>
+      </div>
+    </div>
+    <ul id="sidebarMenu" class="sidebar-menu">
+      <li class="menu-item active" data-section="dashboardSection">Dashboard</li>
+      <li class="menu-item" data-section="calcularSection">Calcular</li>
+      <li class="menu-item" data-section="transacoesSection">Transações</li>
+      <li class="menu-item" data-section="relatoriosSection">Relatórios</li>
+    </ul>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main class="main">
+
+    <header class="main-header">
+      <div>
+        <h1>Dashboard Financeiro</h1>
+        <p class="subtitle">Controle seus ganhos e despesas com rapidez e estilo.</p>
+      </div>
+      <div class="status-chip">Modo rápido</div>
+    </header>
+
+    <section id="dashboardSection" class="page-section active">
+      <section class="cards">
+        <div class="card entrada">
+          <h3>Entradas</h3>
+          <p id="entradas">R$ 0</p>
+        </div>
+
+        <div class="card saida">
+          <h3>Saídas</h3>
+          <p id="saidas">R$ 0</p>
+        </div>
+
+        <div class="card saldo">
+          <h3>Saldo</h3>
+          <p id="saldo">R$ 0</p>
+        </div>
+      </section>
+
+      <div class="chart-card">
+        <div class="chart-top">
+          <div>
+            <h2>Visão geral do fluxo</h2>
+            <p>Compare entradas e saídas no gráfico.</p>
+          </div>
+        </div>
+        <canvas id="grafico"></canvas>
+      </div>
+    </section>
+
+    <section id="calcularSection" class="page-section">
+      <div class="section-header">
+        <h2>Calculadora</h2>
+        <p>Adicione valores com nomes claros e registre de forma simples.</p>
+      </div>
+      <section class="form form-card">
+        <label for="descricao">Nome da transação</label>
+        <input type="text" id="descricao" placeholder="Ex: salário, mercado, aluguel">
+
+        <label for="valor">Valor em R$</label>
+        <input type="number" id="valor" placeholder="Ex: 1500, 250, 89.90">
+
+        <div class="botoes">
+          <button class="btn-entry" onclick="adicionar('entrada')">Ganhei</button>
+          <button class="btn-expense" onclick="adicionar('saida')">Gastei</button>
+        </div>
+      </section>
+    </section>
+
+    <section id="transacoesSection" class="page-section">
+      <div class="section-header">
+        <h2>Transações</h2>
+        <p>Veja o histórico completo das movimentações.</p>
+      </div>
+      <ul id="lista" class="transaction-list"></ul>
+    </section>
+
+    <section id="relatoriosSection" class="page-section">
+      <div class="section-header">
+        <h2>Relatórios</h2>
+        <p>Resumo simples das finanças.</p>
+      </div>
+      <div class="relatorio-box">
+        <p>Em breve, gráficos e análises aqui.</p>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
