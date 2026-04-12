@@ -2,111 +2,246 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Finance Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<div class="container">
+<div class="app">
 
-  <!-- Sidebar -->
+  <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <div class="brand">
-      <span>💼</span>
+      <div class="brand-icon">💼</div>
       <div>
         <h2>Finance</h2>
         <p>Dashboard</p>
       </div>
     </div>
-    <ul id="sidebarMenu" class="sidebar-menu">
-      <li class="menu-item active" data-section="dashboardSection">Dashboard</li>
-      <li class="menu-item" data-section="calcularSection">Calcular</li>
-      <li class="menu-item" data-section="transacoesSection">Transações</li>
-      <li class="menu-item" data-section="relatoriosSection">Relatórios</li>
-    </ul>
+
+    <nav class="nav">
+      <span class="nav-label">Menu</span>
+      <ul class="sidebar-menu">
+        <li class="menu-item active" data-section="dashboardSection">
+          <span class="menu-icon">◈</span> Dashboard
+        </li>
+        <li class="menu-item" data-section="calcularSection">
+          <span class="menu-icon">＋</span> Adicionar
+        </li>
+        <li class="menu-item" data-section="transacoesSection">
+          <span class="menu-icon">≡</span> Transações
+        </li>
+        <li class="menu-item" data-section="relatoriosSection">
+          <span class="menu-icon">◎</span> Relatórios
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-clear" onclick="App.limparTudo()">🗑 Limpar tudo</button>
+    </div>
   </aside>
 
-  <!-- Conteúdo -->
+  <!-- ── Main ── -->
   <main class="main">
 
-    <header class="main-header">
-      <div>
-        <h1>Dashboard Financeiro</h1>
-        <p class="subtitle">Controle seus ganhos e despesas com rapidez e estilo.</p>
-      </div>
-      <div class="status-chip">Modo rápido</div>
-    </header>
-
+    <!-- Dashboard -->
     <section id="dashboardSection" class="page-section active">
-      <section class="cards">
-        <div class="card entrada">
-          <h3>Entradas</h3>
-          <p id="entradas">R$ 0</p>
+      <header class="page-header">
+        <div>
+          <h1>Visão Geral</h1>
+          <p class="subtitle" id="dataAtual"></p>
         </div>
-
-        <div class="card saida">
-          <h3>Saídas</h3>
-          <p id="saidas">R$ 0</p>
+        <div class="header-chips">
+          <select id="filtroPeriodo" class="chip-select" onchange="App.atualizarTudo()">
+            <option value="todos">Todos os períodos</option>
+            <option value="mes">Este mês</option>
+            <option value="semana">Esta semana</option>
+          </select>
         </div>
+      </header>
 
-        <div class="card saldo">
-          <h3>Saldo</h3>
-          <p id="saldo">R$ 0</p>
+      <div class="cards">
+        <div class="card card-entrada">
+          <div class="card-label">Entradas</div>
+          <div class="card-value" id="totalEntradas">R$ 0,00</div>
+          <div class="card-sub" id="qtdEntradas">0 transações</div>
         </div>
-      </section>
+        <div class="card card-saida">
+          <div class="card-label">Saídas</div>
+          <div class="card-value" id="totalSaidas">R$ 0,00</div>
+          <div class="card-sub" id="qtdSaidas">0 transações</div>
+        </div>
+        <div class="card card-saldo">
+          <div class="card-label">Saldo</div>
+          <div class="card-value" id="saldoAtual">R$ 0,00</div>
+          <div class="card-sub" id="saldoStatus">—</div>
+        </div>
+      </div>
 
-      <div class="chart-card">
-        <div class="chart-top">
-          <div>
-            <h2>Visão geral do fluxo</h2>
-            <p>Compare entradas e saídas no gráfico.</p>
+      <div class="charts-grid">
+        <div class="chart-card chart-main">
+          <div class="chart-card-header">
+            <h3>Fluxo de caixa</h3>
+            <p>Entradas vs. saídas ao longo do tempo</p>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="graficoLinha"></canvas>
           </div>
         </div>
-        <canvas id="grafico"></canvas>
-      </div>
-    </section>
-
-    <section id="calcularSection" class="page-section">
-      <div class="section-header">
-        <h2>Calculadora</h2>
-        <p>Adicione valores com nomes claros e registre de forma simples.</p>
-      </div>
-      <section class="form form-card">
-        <label for="descricao">Nome da transação</label>
-        <input type="text" id="descricao" placeholder="Ex: salário, mercado, aluguel">
-
-        <label for="valor">Valor em R$</label>
-        <input type="number" id="valor" placeholder="Ex: 1500, 250, 89.90">
-
-        <div class="botoes">
-          <button class="btn-entry" onclick="adicionar('entrada')">Ganhei</button>
-          <button class="btn-expense" onclick="adicionar('saida')">Gastei</button>
+        <div class="chart-card chart-side">
+          <div class="chart-card-header">
+            <h3>Por categoria</h3>
+            <p>Distribuição das saídas</p>
+          </div>
+          <div class="chart-wrap chart-wrap-donut">
+            <canvas id="graficoPizza"></canvas>
+          </div>
         </div>
-      </section>
+      </div>
+
+      <div class="recent-card">
+        <div class="recent-header">
+          <h3>Últimas transações</h3>
+          <button class="link-btn" onclick="App.navegarPara('transacoesSection')">Ver todas →</button>
+        </div>
+        <ul id="listaRecente" class="transaction-list"></ul>
+        <div id="emptyRecente" class="empty-state">
+          <span>📊</span>
+          <p>Nenhuma transação ainda.<br>Vá em <strong>Adicionar</strong> para começar.</p>
+        </div>
+      </div>
     </section>
 
+    <!-- Adicionar -->
+    <section id="calcularSection" class="page-section">
+      <header class="page-header">
+        <div>
+          <h1>Adicionar</h1>
+          <p class="subtitle">Registre uma nova movimentação.</p>
+        </div>
+      </header>
+
+      <div class="form-card">
+        <div class="form-group">
+          <label for="descricao">Descrição</label>
+          <input type="text" id="descricao" placeholder="Ex: Salário, Mercado, Aluguel…" autocomplete="off">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valor">Valor (R$)</label>
+            <input type="number" id="valor" placeholder="0,00" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="categoria">Categoria</label>
+            <select id="categoria">
+              <option value="outros">Outros</option>
+              <option value="alimentacao">🍔 Alimentação</option>
+              <option value="transporte">🚗 Transporte</option>
+              <option value="moradia">🏠 Moradia</option>
+              <option value="saude">💊 Saúde</option>
+              <option value="lazer">🎮 Lazer</option>
+              <option value="educacao">📚 Educação</option>
+              <option value="salario">💼 Salário</option>
+              <option value="investimento">📈 Investimento</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dataTransacao">Data</label>
+          <input type="date" id="dataTransacao">
+        </div>
+
+        <div class="form-group">
+          <label for="observacao">Observação (opcional)</label>
+          <input type="text" id="observacao" placeholder="Algum detalhe adicional…">
+        </div>
+
+        <div class="form-botoes">
+          <button class="btn btn-entrada" onclick="App.adicionar('entrada')">
+            <span>＋</span> Registrar entrada
+          </button>
+          <button class="btn btn-saida" onclick="App.adicionar('saida')">
+            <span>−</span> Registrar saída
+          </button>
+        </div>
+
+        <div id="formFeedback" class="form-feedback hidden"></div>
+      </div>
+    </section>
+
+    <!-- Transações -->
     <section id="transacoesSection" class="page-section">
-      <div class="section-header">
-        <h2>Transações</h2>
-        <p>Veja o histórico completo das movimentações.</p>
+      <header class="page-header">
+        <div>
+          <h1>Transações</h1>
+          <p class="subtitle">Histórico completo das movimentações.</p>
+        </div>
+      </header>
+
+      <div class="filtros-bar">
+        <input type="text" id="busca" placeholder="🔍 Buscar por descrição…" oninput="App.renderizarLista()" class="input-busca">
+        <select id="filtroTipo" onchange="App.renderizarLista()" class="chip-select">
+          <option value="todos">Todos</option>
+          <option value="entrada">Entradas</option>
+          <option value="saida">Saídas</option>
+        </select>
+        <select id="filtroCategoria" onchange="App.renderizarLista()" class="chip-select">
+          <option value="todos">Todas categorias</option>
+          <option value="alimentacao">Alimentação</option>
+          <option value="transporte">Transporte</option>
+          <option value="moradia">Moradia</option>
+          <option value="saude">Saúde</option>
+          <option value="lazer">Lazer</option>
+          <option value="educacao">Educação</option>
+          <option value="salario">Salário</option>
+          <option value="investimento">Investimento</option>
+          <option value="outros">Outros</option>
+        </select>
       </div>
-      <ul id="lista" class="transaction-list"></ul>
+
+      <ul id="lista" class="transaction-list transaction-list-full"></ul>
+      <div id="emptyLista" class="empty-state">
+        <span>🗂</span>
+        <p>Nenhuma transação encontrada.</p>
+      </div>
     </section>
 
+    <!-- Relatórios -->
     <section id="relatoriosSection" class="page-section">
-      <div class="section-header">
-        <h2>Relatórios</h2>
-        <p>Resumo simples das finanças.</p>
-      </div>
-      <div class="relatorio-box">
-        <p>Em breve, gráficos e análises aqui.</p>
+      <header class="page-header">
+        <div>
+          <h1>Relatórios</h1>
+          <p class="subtitle">Análise detalhada das suas finanças.</p>
+        </div>
+      </header>
+
+      <div class="relatorio-grid">
+        <div class="relatorio-card">
+          <h3>Resumo</h3>
+          <ul id="relatorioResumo" class="relatorio-list"></ul>
+        </div>
+        <div class="relatorio-card">
+          <h3>Top gastos por categoria</h3>
+          <ul id="relatorioCategorias" class="relatorio-list"></ul>
+        </div>
+        <div class="relatorio-card relatorio-card-full">
+          <h3>Maiores despesas</h3>
+          <ul id="relatorioMaiores" class="relatorio-list"></ul>
+        </div>
       </div>
     </section>
 
   </main>
-
 </div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
 
 <script src="script.js"></script>
 </body>
